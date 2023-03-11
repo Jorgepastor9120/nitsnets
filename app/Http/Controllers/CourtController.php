@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Court;
+use App\Models\Sport;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CourtController extends Controller
 {
@@ -12,15 +14,21 @@ class CourtController extends Controller
      */
     public function index()
     {
-        //
+        return view('courts.index', [
+            'courts' => Court::orderBy('id', 'desc')
+                                ->paginate(5)
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Court $court)
     {
-        //
+        return view('courts.court_create', [
+            'court' => $court,
+            'sports' => Sport::all()
+        ]);
     }
 
     /**
@@ -28,7 +36,22 @@ class CourtController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:courts,name',
+            'sport_id' => 'required'
+        ]);
+        
+        $createCourt = Court::create(
+            [
+                'name' => $request->name,
+                'sport_id' => $request->sport_id
+            ]);
+
+        return view('courts.court_edit', [
+                'court' => $createCourt,
+                'sports' => Sport::all(),
+                'btnNewCourt' => true
+            ]);
     }
 
     /**
@@ -44,7 +67,10 @@ class CourtController extends Controller
      */
     public function edit(Court $court)
     {
-        //
+        return view('courts.court_edit', [
+            'court' => $court,
+            'sports' => Sport::all()
+        ]);
     }
 
     /**
@@ -52,7 +78,24 @@ class CourtController extends Controller
      */
     public function update(Request $request, Court $court)
     {
-        //
+        $request->validate([
+            'name' => [
+                'required',
+                 Rule::unique('courts', 'name')->ignore($court->id)
+            ],
+            'sport_id' => 'required'
+        ]);
+
+        $court->update(
+            [
+                'name' => $request->name,
+                'sport_id' => $request->sport_id
+            ]);
+
+        return view('courts.court_edit', [
+            'court' => $court,
+            'sports' => Sport::all()
+        ]);
     }
 
     /**
@@ -60,6 +103,8 @@ class CourtController extends Controller
      */
     public function destroy(Court $court)
     {
-        //
+        $court->delete();
+
+        return back();
     }
 }

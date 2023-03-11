@@ -4,39 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class MemberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return view('members.index', [
+            'members' => Member::orderBy('id', 'desc')
+                                ->paginate(5)
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Member $member)
     {
-        //
+        return view('members.member_create', [
+            'member' => $member
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|unique:members,email',
+        ]);
+        
+        $createMember = Member::create(
+            [
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+
+        return view('members.member_edit', [
+                'member' => $createMember,
+                'btnNewMember' => true
+            ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Member $member)
     {
-        //
+        //En desuso
     }
 
     /**
@@ -44,7 +52,9 @@ class MemberController extends Controller
      */
     public function edit(Member $member)
     {
-        //
+        return view('members.member_edit', [
+            'member' => $member
+        ]);
     }
 
     /**
@@ -52,7 +62,23 @@ class MemberController extends Controller
      */
     public function update(Request $request, Member $member)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => [
+                'required',
+                 Rule::unique('members', 'email')->ignore($member->id)
+             ]
+        ]);
+
+        $member->update(
+            [
+                'name' => $request->name,
+                'email' => $request->email
+            ]);
+
+        return view('members.member_edit', [
+            'member' => $member
+        ]);
     }
 
     /**
@@ -60,6 +86,8 @@ class MemberController extends Controller
      */
     public function destroy(Member $member)
     {
-        //
+        $member->delete();
+
+        return back();
     }
 }

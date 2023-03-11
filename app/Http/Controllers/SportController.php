@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Court;
 use App\Models\Sport;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SportController extends Controller
 {
@@ -12,15 +14,24 @@ class SportController extends Controller
      */
     public function index()
     {
-        //
+        return view('sports.index', [
+            'sports' => Sport::orderBy('id', 'desc')
+                                ->addSelect([
+                                    'courts' => Court::selectRaw('count(id)')
+                                    ->wherecolumn('sport_id', 'sports.id')
+                                ])
+                                ->paginate(5)
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Sport $sport)
     {
-        //
+        return view('sports.sport_create', [
+            'sport' => $sport
+        ]);
     }
 
     /**
@@ -28,7 +39,19 @@ class SportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:sports,name'
+        ]);
+        
+        $createSport = Sport::create(
+            [
+                'name' => $request->name
+            ]);
+
+        return view('sports.sport_edit', [
+                'sport' => $createSport,
+                'btnNewSport' => true
+            ]);
     }
 
     /**
@@ -44,7 +67,9 @@ class SportController extends Controller
      */
     public function edit(Sport $sport)
     {
-        //
+        return view('sports.sport_edit', [
+            'sport' => $sport
+        ]);
     }
 
     /**
@@ -52,7 +77,21 @@ class SportController extends Controller
      */
     public function update(Request $request, Sport $sport)
     {
-        //
+        $request->validate([
+            'name' => [
+                'required',
+                 Rule::unique('sports', 'name')->ignore($sport->id)
+             ]
+        ]);
+
+        $sport->update(
+            [
+                'name' => $request->name
+            ]);
+
+        return view('sports.sport_edit', [
+            'sport' => $sport
+        ]);
     }
 
     /**
@@ -60,6 +99,8 @@ class SportController extends Controller
      */
     public function destroy(Sport $sport)
     {
-        //
+        $sport->delete();
+
+        return back();
     }
 }

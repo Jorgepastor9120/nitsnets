@@ -20,7 +20,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('sports')
                 ->onDelete('set null');
-            $table->string('name');
+            $table->string('name')->unique();
 
             $table->timestamps();
         });

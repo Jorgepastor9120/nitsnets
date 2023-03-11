@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CourtController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,5 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::resource('courts', CourtController::class);
+Route::resource('members', MemberController::class);
+Route::resource('sports', SportController::class);
 
 require __DIR__.'/auth.php';

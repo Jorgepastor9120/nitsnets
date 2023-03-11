@@ -15,6 +15,15 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('members.index')" :active="request()->routeIs('members.index')">
+                        {{ __('Socios') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('sports.index')" :active="request()->routeIs('sports.index')">
+                        {{ __('Deportes') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('courts.index')" :active="request()->routeIs('courts.index')">
+                        {{ __('Pistas') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -70,6 +79,15 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('members.index')" :active="request()->routeIs('members.index')">
+                {{ __('Socios') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('sports.index')" :active="request()->routeIs('sports.index')">
+                {{ __('Deportes') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('courts.index')" :active="request()->routeIs('courts.index')">
+                {{ __('Pistas') }}
             </x-responsive-nav-link>
         </div>
 
