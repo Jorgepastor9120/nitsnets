@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Court;
 use App\Models\Sport;
+use App\Http\Requests\SportStoreRequest;
+use App\Http\Requests\SportUpdateRequest;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class SportController extends Controller
 {
@@ -37,12 +38,8 @@ class SportController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SportStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required|unique:sports,name'
-        ]);
-        
         $createSport = Sport::create(
             [
                 'name' => $request->name
@@ -75,15 +72,8 @@ class SportController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sport $sport)
+    public function update(SportUpdateRequest $request, Sport $sport)
     {
-        $request->validate([
-            'name' => [
-                'required',
-                 Rule::unique('sports', 'name')->ignore($sport->id)
-             ]
-        ]);
-
         $sport->update(
             [
                 'name' => $request->name

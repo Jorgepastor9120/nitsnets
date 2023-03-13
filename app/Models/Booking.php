@@ -9,11 +9,18 @@ class Booking extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'member_id' => 'int',
+        'court_id' => 'int',
+        'date' => 'date',
+        'hour_reserve_id' => 'string:5',
+    ];
+
     protected $fillable = [
         'member_id',
         'court_id',
         'date',
-        'hour',
+        'hour_reserve_id',
     ];
 
     public function court()
@@ -24,5 +31,9 @@ class Booking extends Model
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+    public function hourReserve()
+    {
+        return $this->belongsTo(HourReserve::class);
     }
 }

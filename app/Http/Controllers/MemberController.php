@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Http\Requests\MemberStoreRequest;
+use App\Http\Requests\MemberUpdateRequest;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class MemberController extends Controller
 {
@@ -23,13 +24,8 @@ class MemberController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(MemberStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:members,email',
-        ]);
-        
         $createMember = Member::create(
             [
                 'name' => $request->name,
@@ -60,16 +56,8 @@ class MemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Member $member)
+    public function update(MemberUpdateRequest $request, Member $member)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => [
-                'required',
-                 Rule::unique('members', 'email')->ignore($member->id)
-             ]
-        ]);
-
         $member->update(
             [
                 'name' => $request->name,

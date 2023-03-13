@@ -5,19 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Member extends Model
+class HourReserve extends Model
 {
     use HasFactory;
-
-    protected $casts = [
-        'name' => 'string:255',
-        'email' => 'string:255',
-    ];
-
-    protected $fillable = [
-        'name',
-        'email',
-    ];
 
     public function bookings()
     {

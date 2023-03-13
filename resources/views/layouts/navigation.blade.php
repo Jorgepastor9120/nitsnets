@@ -24,6 +24,9 @@
                     <x-nav-link :href="route('courts.index')" :active="request()->routeIs('courts.index')">
                         {{ __('Pistas') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('bookings.index')" :active="request()->routeIs('bookings.index')">
+                        {{ __('Reservas') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -88,6 +91,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('courts.index')" :active="request()->routeIs('courts.index')">
                 {{ __('Pistas') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('bookings.index')" :active="request()->routeIs('bookings.index')">
+                {{ __('Reservas') }}
             </x-responsive-nav-link>
         </div>
 

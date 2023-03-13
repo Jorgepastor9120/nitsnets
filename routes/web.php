@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CourtController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ProfileController;
@@ -27,6 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::get('get-hours/{member_id}/{court_id}/{date}', [BookingController::class, 'getHours']);
+Route::resource('bookings', BookingController::class);
 Route::resource('courts', CourtController::class);
 Route::resource('members', MemberController::class);
 Route::resource('sports', SportController::class);

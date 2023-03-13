@@ -27,7 +27,7 @@ return new class extends Migration
                 ->on('courts')
                 ->onDelete('set null');
             $table->date('date');
-            $table->string('hour', 5);
+            $table->string('hour_reserve_id', 5);
 
             $table->timestamps();
         });

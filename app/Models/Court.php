@@ -9,6 +9,11 @@ class Court extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'sport_id' => 'int',
+        'name' => 'string:255',
+    ];
+
     protected $fillable = [
         'sport_id',
         'name',
