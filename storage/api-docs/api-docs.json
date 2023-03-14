@@ -1,8 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API de prueba NitsNet",
+        "title": "API de prueba",
         "description": "Esta es una primera versión de la API",
+        "contact": "jorgepastor9120@gmail.com",
         "version": "1.0"
     },
     "servers": [
@@ -11,24 +12,197 @@
         }
     ],
     "paths": {
+        "/api/v1/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Registro de usuario",
+                "description": "Registro de usuarios",
+                "operationId": "Register",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "text"
+                                    },
+                                    "email": {
+                                        "type": "text"
+                                    },
+                                    "password": {
+                                        "type": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "No se ha podido procesar",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Login de usuario",
+                "description": "Login de usuario",
+                "operationId": "authLogin",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "email"
+                                    },
+                                    "password": {
+                                        "type": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "No se ha podido procesar",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                }
+            }
+        },
         "/api/v1/sports": {
             "get": {
                 "tags": [
-                    "sports"
+                    "Sports"
                 ],
                 "summary": "Mostrar el listado de de deportes",
                 "description": "Mostramos el listado de los regitros solicitados.",
                 "operationId": "79d93c12f3a09f64fde5246febecb9b9",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Sports"
+                ],
+                "summary": "Actualiza un deporte",
+                "description": "Actualizar un registro.",
+                "operationId": "72122b7cf6101b71dd34fa5be6ad7113",
                 "requestBody": {
-                    "description": "Deporte",
+                    "description": "Actualiza un deporte",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "id",
                                     "name"
                                 ],
                                 "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "format": "number",
+                                        "example": "2"
+                                    },
                                     "name": {
                                         "type": "string",
                                         "format": "text",
@@ -45,7 +219,7 @@
                         "description": "OK"
                     },
                     "404": {
-                        "description": "No se ha podido cargar el listado."
+                        "description": "No se ha podido actualizar el registro."
                     },
                     "503": {
                         "description": "El servidor no está disponible en este momento"
@@ -57,10 +231,10 @@
             },
             "post": {
                 "tags": [
-                    "sports"
+                    "Sports"
                 ],
                 "summary": "Registra un deporte",
-                "description": "Mostramos el listado de los regitros solicitados.",
+                "description": "Registrar un deporte.",
                 "operationId": "5c9ce8631cb994864a879f4c65613e4a",
                 "requestBody": {
                     "description": "Registra un deporte",
@@ -98,6 +272,207 @@
                     }
                 }
             }
+        },
+        "/api/v1/sports/{id}": {
+            "delete": {
+                "tags": [
+                    "Sports"
+                ],
+                "summary": "Elimina un deporte",
+                "description": "Elimina un registro.",
+                "operationId": "cccb5bb4607611dcdc828738d9d43294",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id sport",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Elimina un deporte"
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido eliminar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
         }
-    }
+    },
+    "components": {
+        "schemas": {
+            "Booking": {
+                "title": "Booking",
+                "description": "Booking model",
+                "properties": {
+                    "id": {
+                        "description": "ID",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "member_id": {
+                        "description": "member_id",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "court_id": {
+                        "description": "court_id",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "date": {
+                        "description": "date",
+                        "type": "integer(20)",
+                        "example": "2023-02-23"
+                    },
+                    "hour_reserve_id": {
+                        "description": "hour_reserve_id",
+                        "type": "integer(20)",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "Court": {
+                "title": "Court",
+                "description": "Court model",
+                "properties": {
+                    "id": {
+                        "description": "ID",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "sport_id": {
+                        "description": "sport_id",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "name",
+                        "type": "string(255)",
+                        "example": "Pista 1"
+                    }
+                },
+                "type": "object"
+            },
+            "Member": {
+                "title": "Member",
+                "description": "Member model",
+                "properties": {
+                    "id": {
+                        "description": "ID",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "name",
+                        "type": "string(255)",
+                        "example": "Prueba"
+                    },
+                    "email": {
+                        "description": "email",
+                        "type": "string(255)",
+                        "example": "prueba@gmail.com"
+                    }
+                },
+                "type": "object"
+            },
+            "Sport": {
+                "title": "Sport",
+                "description": "Sport model",
+                "properties": {
+                    "id": {
+                        "description": "ID",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Nombre",
+                        "type": "string(255)",
+                        "example": "Tenis"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "description": "ID",
+                        "type": "integer(20)",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Nombre",
+                        "type": "string(255)",
+                        "example": "Prueba2"
+                    },
+                    "email": {
+                        "description": "email",
+                        "type": "string(255)",
+                        "example": "prueba2@gmail.com"
+                    },
+                    "password": {
+                        "description": "password",
+                        "type": "string(255)",
+                        "example": "12345678"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "passport": {
+                "type": "oauth2",
+                "description": "Laravel passport oauth2 security.",
+                "in": "header",
+                "scheme": "https",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost/oauth/authorize",
+                        "tokenUrl": "http://localhost/oauth/token",
+                        "refreshUrl": "http://localhost/token/refresh",
+                        "scopes": []
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Users",
+            "description": "Gestión de los usuarios de la aplicación"
+        },
+        {
+            "name": "Sports",
+            "description": "Gestión de los deportes"
+        },
+        {
+            "name": "Courts",
+            "description": "Gestión de las pistas"
+        },
+        {
+            "name": "Members",
+            "description": "Gestión de los socios"
+        },
+        {
+            "name": "Bookings",
+            "description": "Gestión de las reservas de pista"
+        }
+    ]
 }

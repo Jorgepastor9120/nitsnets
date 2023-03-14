@@ -5,6 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     title="Court",
+ *     description="Court model",
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer(20)",
+ *         description="ID",
+ *         example="1"
+ *     ),
+ *     @OA\Property(
+ *         property="sport_id",
+ *         type="integer(20)",
+ *         description="sport_id",
+ *         example="1"
+ *     ),
+ *     @OA\Property(
+ *         property="name",
+ *         type="string(255)",
+ *         description="name",
+ *         example="Pista 1"
+ *     )
+ * )
+ */
+
 class Court extends Model
 {
     use HasFactory;
