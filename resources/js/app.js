@@ -50,6 +50,11 @@ $(document).ready(function(){
             
             }
           });
+
+          $('#datepickerSearch').datepicker({
+            dateFormat: 'dd-mm-yy',
+
+          });
       });
 
 });

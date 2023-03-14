@@ -1,0 +1,103 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de prueba NitsNet",
+        "description": "Esta es una primera versión de la API",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000"
+        }
+    ],
+    "paths": {
+        "/api/v1/sports": {
+            "get": {
+                "tags": [
+                    "sports"
+                ],
+                "summary": "Mostrar el listado de de deportes",
+                "description": "Mostramos el listado de los regitros solicitados.",
+                "operationId": "79d93c12f3a09f64fde5246febecb9b9",
+                "requestBody": {
+                    "description": "Deporte",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Tenis"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "sports"
+                ],
+                "summary": "Registra un deporte",
+                "description": "Mostramos el listado de los regitros solicitados.",
+                "operationId": "5c9ce8631cb994864a879f4c65613e4a",
+                "requestBody": {
+                    "description": "Registra un deporte",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Tenis"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        }
+    }
+}

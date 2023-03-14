@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\SportController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/sports', [SportController::class, 'index']);
+Route::post('/sports', [SportController::class, 'store']);
+Route::put('/sports/{id}', [SportController::class, 'update']);
+Route::delete('/sports/{id}', [SportController::class, 'destroy']);

@@ -32,6 +32,7 @@ class Booking extends Model
     {
         return $this->belongsTo(Member::class);
     }
+    
     public function hourReserve()
     {
         return $this->belongsTo(HourReserve::class);

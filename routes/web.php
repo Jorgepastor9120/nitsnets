@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('get-hours/{member_id}/{court_id}/{date}', [BookingController::class, 'getHours']);
 Route::resource('bookings', BookingController::class);
+Route::get('/search-bookings', [BookingController::class, 'searchBookings'])->name('search-bookings.get');
+
 Route::resource('courts', CourtController::class);
 Route::resource('members', MemberController::class);
 Route::resource('sports', SportController::class);

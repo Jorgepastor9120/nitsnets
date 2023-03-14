@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Court;
+use Carbon\Carbon;
 use App\Models\Booking;
+use App\Models\Court;
 use App\Models\HourReserve;
 use App\Models\Member;
-
 use Illuminate\Http\Request;
 
 /**
@@ -78,9 +78,32 @@ class BookingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function formatDate($requestDate)
+    {
+        $date = Carbon::createFromFormat('d/m/Y', $requestDate);
+        return $date->format('Y-m-d');
+    }
+
+    public function formatDateSearch($requestDate)
+    {
+        $date = Carbon::createFromFormat('d-m-Y', $requestDate);
+        return $date->format('Y-m-d');
+    }
+
     public function store(Request $request)
     {
-        //
+        $createBooking = Booking::create(
+            [
+                'member_id' => $request->member_id,
+                'court_id' => $request->court_id,
+                'date' => $this->formatDate($request->date),
+                'hour_reserve_id' => $request->hour,
+            ]);
+
+        return view('bookings.booking_show', [
+                'booking' => $createBooking,
+                'btnNewBooking' => true
+            ]);
     }
 
     /**
@@ -88,7 +111,9 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        //
+        return view('bookings.booking_show', [
+            'booking' => $booking,
+        ]);
     }
 
     /**
@@ -114,6 +139,17 @@ class BookingController extends Controller
     {
         $booking->delete();
 
-        return back();
+        return view('bookings.index', [
+            'bookings' => Booking::orderBy('id', 'desc')
+                                ->paginate(10)
+        ]);
+    }
+
+    public function searchBookings(Request $request)
+    {
+        return view('bookings.index', [
+            'bookings' => Booking::where('date', $this->formatDateSearch($request->date))
+                                ->paginate(10)
+        ]);
     }
 }

@@ -40,7 +40,7 @@
     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
     focus:border-blue-500 block w-full pl-10 dark:bg-gray-700 dark:border-gray-600
     dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-    placeholder="Select date" autocomplete="off">
+    placeholder="Select date" autocomplete="off" required>
     </div>
 </div>
 
@@ -49,7 +49,7 @@
     <select id="hour" name="hour" class="select2 bg-gray-50 border border-gray-300 text-gray-900 text-sm
     rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700
     dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-    dark:focus:border-blue-500">
+    dark:focus:border-blue-500" required>
     <option value="">Selecciona una hora</option>
     </select>
 </div>
