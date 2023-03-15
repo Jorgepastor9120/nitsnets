@@ -152,14 +152,14 @@
                 }
             }
         },
-        "/api/v1/sports": {
+        "/api/v1/bookings": {
             "get": {
                 "tags": [
-                    "Sports"
+                    "Bookings"
                 ],
-                "summary": "Mostrar el listado de de deportes",
+                "summary": "Mostrar el listado de reservas",
                 "description": "Mostramos el listado de los regitros solicitados.",
-                "operationId": "79d93c12f3a09f64fde5246febecb9b9",
+                "operationId": "daf1d30d180ba251d3a594b8cc06fcc5",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -180,33 +180,207 @@
                     }
                 }
             },
-            "put": {
+            "post": {
                 "tags": [
-                    "Sports"
+                    "Bookings"
                 ],
-                "summary": "Actualiza un deporte",
-                "description": "Actualizar un registro.",
-                "operationId": "72122b7cf6101b71dd34fa5be6ad7113",
+                "summary": "Registra una reserva",
+                "description": "Registrar una pista.",
+                "operationId": "f6f5bf7dc5def23c323cebb98b5d1e5d",
                 "requestBody": {
-                    "description": "Actualiza un deporte",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "id",
-                                    "name"
+                                    "member_id",
+                                    "court_id",
+                                    "date",
+                                    "hour_reserve_id"
                                 ],
                                 "properties": {
-                                    "id": {
+                                    "member_id": {
                                         "type": "integer",
-                                        "format": "number",
-                                        "example": "2"
+                                        "format": "int20",
+                                        "example": "4"
                                     },
+                                    "court_id": {
+                                        "type": "integer",
+                                        "format": "int20",
+                                        "example": "7"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2023-10-25"
+                                    },
+                                    "hour_reserve_id": {
+                                        "description": "Hora del día (formato de 24 horas desde las 08:00 a 22:00)",
+                                        "type": "integer",
+                                        "format": "int20",
+                                        "enum": [
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7,
+                                            8,
+                                            9,
+                                            10,
+                                            11,
+                                            12,
+                                            13
+                                        ],
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "La pista ha sido creado"
+                    },
+                    "404": {
+                        "description": "No se ha podido registrar la pista."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/v1/courts": {
+            "get": {
+                "tags": [
+                    "Courts"
+                ],
+                "summary": "Mostrar el listado de pistas",
+                "description": "Mostramos el listado de los regitros solicitados.",
+                "operationId": "169d48b766db492f3b88a2dc18ac610a",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Courts"
+                ],
+                "summary": "Registra una pista",
+                "description": "Registrar una pista.",
+                "operationId": "8844919b2ce51a688141af6b7fd643d9",
+                "requestBody": {
+                    "description": "Registra una pista",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "sport_id"
+                                ],
+                                "properties": {
                                     "name": {
                                         "type": "string",
                                         "format": "text",
-                                        "example": "Tenis"
+                                        "example": "Prueba"
+                                    },
+                                    "sport_id": {
+                                        "type": "integer",
+                                        "format": "int20",
+                                        "example": "4"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "La pista ha sido creado"
+                    },
+                    "404": {
+                        "description": "No se ha podido registrar la pista."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/v1/courts/{id}": {
+            "put": {
+                "tags": [
+                    "Courts"
+                ],
+                "summary": "Actualiza una pista",
+                "description": "Actualizar un registro.",
+                "operationId": "18e011c79872b3d2425194ac89f4f80b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id court",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Actualiza una pista",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "sport_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Prueba"
+                                    },
+                                    "sport_id": {
+                                        "type": "integer",
+                                        "format": "int20",
+                                        "example": "4"
                                     }
                                 },
                                 "type": "object"
@@ -220,6 +394,259 @@
                     },
                     "404": {
                         "description": "No se ha podido actualizar el registro."
+                    },
+                    "405": {
+                        "description": "No se ha permitido actualizar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Courts"
+                ],
+                "summary": "Elimina una pista",
+                "description": "Elimina un registro.",
+                "operationId": "9e9bdad4534f30a493414cbfaea01429",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id court",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Elimina una pista"
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido eliminar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/v1/members": {
+            "get": {
+                "tags": [
+                    "Members"
+                ],
+                "summary": "Mostrar el listado de socios",
+                "description": "Mostramos el listado de los socios solicitados.",
+                "operationId": "f123b24777b50b0ba6fd1941011247bc",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Members"
+                ],
+                "summary": "Registra un socio",
+                "description": "Registrar un socio.",
+                "operationId": "390c26a692d9bcf656f35603e9da4dee",
+                "requestBody": {
+                    "description": "Registra un socio",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Prueba"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "prueba@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "El socio ha sido creado"
+                    },
+                    "404": {
+                        "description": "No se ha podido registrar el socio."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/v1/members/{id}": {
+            "put": {
+                "tags": [
+                    "Members"
+                ],
+                "summary": "Actualiza un socio",
+                "description": "Actualizar un registro.",
+                "operationId": "ac90f5a9c6d6dd9c699389c72facebee",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id member",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Actualiza un socio",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Prueba"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "prueba@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido actualizar el registro."
+                    },
+                    "405": {
+                        "description": "No se ha permitido actualizar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Members"
+                ],
+                "summary": "Elimina un socio",
+                "description": "Elimina un registro.",
+                "operationId": "d17879bfe9b223bba4102503b362dc7d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id member",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Elimina un socio"
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido eliminar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/v1/sports": {
+            "get": {
+                "tags": [
+                    "Sports"
+                ],
+                "summary": "Mostrar el listado de deportes",
+                "description": "Mostramos el listado de los regitros solicitados.",
+                "operationId": "79d93c12f3a09f64fde5246febecb9b9",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
                     },
                     "503": {
                         "description": "El servidor no está disponible en este momento"
@@ -261,8 +688,11 @@
                     "200": {
                         "description": "OK"
                     },
+                    "201": {
+                        "description": "El socio ha sido creado"
+                    },
                     "404": {
-                        "description": "No se ha podido cargar el listado."
+                        "description": "No se ha podido registrar el deporte."
                     },
                     "503": {
                         "description": "El servidor no está disponible en este momento"
@@ -274,6 +704,61 @@
             }
         },
         "/api/v1/sports/{id}": {
+            "put": {
+                "tags": [
+                    "Sports"
+                ],
+                "summary": "Actualiza un deporte",
+                "description": "Actualizar un registro.",
+                "operationId": "b70ca687339217954121e055e103c3cc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id sport",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Actualiza un deporte",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Tenis"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido actualizar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
             "delete": {
                 "tags": [
                     "Sports"
@@ -289,7 +774,7 @@
                         "required": true,
                         "schema": {
                             "type": "integer",
-                            "format": "int64"
+                            "format": "int20"
                         }
                     }
                 ],

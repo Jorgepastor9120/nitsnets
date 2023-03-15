@@ -3,23 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SportStoreRequest;
-use App\Http\Requests\SportUpdateApiRequest;
-use App\Models\Sport;
+use App\Http\Requests\MemberStoreRequest;
+use App\Http\Requests\MemberUpdateApiRequest;
+use App\Models\Member;
 use Illuminate\Http\Request;
 
-
-class SportController extends Controller
+class MemberController extends Controller
 {
-
     /**
-     * Mostramos el listado de los regitros solicitados.
+     * Mostramos el listado de los socios solicitados.
      * @return \Illuminate\Http\Response
      *
      * @OA\Get(
-     *    path="/api/v1/sports",
-     *    tags={"Sports"},
-     *    summary="Mostrar el listado de deportes",
+     *    path="/api/v1/members",
+     *    tags={"Members"},
+     *    summary="Mostrar el listado de socios",
      *    @OA\Response(
      *        response=200,
      *        description="OK",
@@ -39,25 +37,31 @@ class SportController extends Controller
      *     )
      * )
      */
-    public function index(Sport $sport)
+
+    public function index(Member $member)
     {
-        return $sport->get();
+        return $member->get();
     }
 
     /**
-     * Registrar un deporte.
+     * Registrar un socio.
      * @return \Illuminate\Http\Response
      *
      * @OA\Post(
-     *    path="/api/v1/sports",
-     *    tags={"Sports"},
-     *    summary="Registra un deporte",
+     *    path="/api/v1/members",
+     *    tags={"Members"},
+     *    summary="Registra un socio",
      *    @OA\RequestBody(
      *       required=true,
-     *       description="Registra un deporte",
+     *       description="Registra un socio",
      *       @OA\JsonContent(
-     *           required={"name"},
-     *           @OA\Property(property="name", type="string", format="text", example="Tenis"),
+     *           required={"name", "email"},
+     *           @OA\Property(
+     *               property="name", type="string", format="text", example="Prueba"
+     *           ),
+     *           @OA\Property(
+     *               property="email", type="string", format="text", example="prueba@gmail.com"
+     *           ),
      *       ),
      *    ),
      *    @OA\Response(
@@ -70,7 +74,7 @@ class SportController extends Controller
      *    ),
      *    @OA\Response(
      *        response=404,
-     *        description="No se ha podido registrar el deporte."
+     *        description="No se ha podido registrar el socio."
      *    ),
      *    @OA\Response(
      *        response=503,
@@ -82,20 +86,21 @@ class SportController extends Controller
      *     )
      * )
      */
-    public function store(SportStoreRequest $request)
+    public function store(MemberStoreRequest $request)
     {
-        $createSport = Sport::create(
+        $createMember = Member::create(
             [
-                'name' => $request->name
+                'name' => $request->name,
+                'email' => $request->email,
             ]);
 
-        if (!$createSport) {
+        if (!$createMember) {
             return response([
                 'message' => 'La creación ha fallado'
             ], 404);
         }
-
-        return $createSport;
+    
+        return $createMember;
     }
 
     /**
@@ -103,21 +108,24 @@ class SportController extends Controller
      * @return \Illuminate\Http\Response
      *
      * @OA\Put(
-     *    path="/api/v1/sports/{id}",
-     *    tags={"Sports"},
-     *    summary="Actualiza un deporte",
+     *    path="/api/v1/members/{id}",
+     *    tags={"Members"},
+     *    summary="Actualiza un socio",
      *    @OA\RequestBody(
      *        required=true,
-     *        description="Actualiza un deporte",
+     *        description="Actualiza un socio",
      *        @OA\JsonContent(
-     *            required={"name"},
-     *            @OA\Property(
-     *                property="name", type="string", format="text", example="Tenis"
-     *            ),
-     *        ),
+     *           required={"name", "email"},
+     *           @OA\Property(
+     *               property="name", type="string", format="text", example="Prueba"
+     *           ),
+     *           @OA\Property(
+     *               property="email", type="string", format="text", example="prueba@gmail.com"
+     *           ),
+     *       ),
      *    ),
      *    @OA\Parameter(
-     *        name="id", in="path", required=true, description="Id sport",
+     *        name="id", in="path", required=true, description="Id member",
      *        @OA\schema(type="integer", format="int20")
      *    ),
      *    @OA\Response(
@@ -129,6 +137,10 @@ class SportController extends Controller
      *        description="No se ha podido actualizar el registro."
      *    ),
      *    @OA\Response(
+     *        response=405,
+     *        description="No se ha permitido actualizar el registro."
+     *    ),
+     *    @OA\Response(
      *        response=503,
      *        description="El servidor no está disponible en este momento"
      *    ),
@@ -138,16 +150,23 @@ class SportController extends Controller
      *    )
      * )
      */
-    public function update(SportUpdateApiRequest $request, int $id)
+    public function update(MemberUpdateApiRequest $request, int $id)
     {
-        $sport = Sport::findOrFail($id);
+        $member = Member::findOrFail($id);
 
-        $sport->update(
+        $member->update(
             [
-                'name' => $request->name
+                'name' => $request->name,
+                'email' => $request->email
             ]);
 
-        return $sport;
+        if (!$request) {
+            return response([
+                'message' => 'Acción no permitida'
+            ], 405);
+        }
+
+        return $member;
     }
 
     /**
@@ -155,14 +174,14 @@ class SportController extends Controller
      * @return \Illuminate\Http\Response
      *
      * @OA\Delete(
-     *    path="/api/v1/sports/{id}",
-     *    tags={"Sports"},
-     *    summary="Elimina un deporte",
+     *    path="/api/v1/members/{id}",
+     *    tags={"Members"},
+     *    summary="Elimina un socio",
      *    @OA\RequestBody(
-     *       description="Elimina un deporte"
+     *       description="Elimina un socio"
      *    ),
      *    @OA\Parameter(
-     *        name="id", in="path", required=true, description="Id sport",
+     *        name="id", in="path", required=true, description="Id member",
      *        @OA\schema(type="integer", format="int20")
      *    ),
      *    @OA\Response(
@@ -185,18 +204,18 @@ class SportController extends Controller
      */
     public function destroy(int $id)
     {
-        $sport = Sport::findorFail($id);
+        $member = Member::findorFail($id);
 
-        $sport->delete();
+        $member->delete();
 
-        if (!$sport) {
+        if (!$member) {
             return response([
-                'message' => 'No se encontró el deporte con el ID especificado'
+                'message' => 'No se encontró el socio con el ID especificado'
             ], 404);
         }
 
         return response([
-            'message' => 'Deporte eliminado'
+            'message' => 'Socio eliminado'
         ], 200);
     }
 }
