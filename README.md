@@ -12,6 +12,6 @@ Tener un servidor APACHE levantado en el puerto 80 junto con el servicio de MySQ
 
 Ejecutar los siguientes comandos en la ruta del proyecto:
 
-"php run serve" para levantar el servidor.
+```php run serve``` para levantar el servidor.
 
-"npm run dev" para compiar el front.
+```npm run dev``` para compiar el front.
