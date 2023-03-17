@@ -297,7 +297,7 @@ class CourtController extends Controller
                                                                                     ->from('hour_reserves');
                                                                             });
                                                                     });
-                                                    })->paginate(5);
+                                                    })->get();
 
             $addCourt = [
                 "id" => $court->id,

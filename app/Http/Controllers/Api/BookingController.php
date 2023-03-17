@@ -461,6 +461,6 @@ class BookingController extends Controller
      */
     public function listBookingByDate(string $date)
     {
-        return Booking::where('date', $date)->paginate(5);
+        return Booking::where('date', $date)->get(5);
     }
 }
