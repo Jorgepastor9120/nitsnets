@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "API de prueba",
+        "title": "API de prueba NITSNETS",
         "description": "Esta es una primera versión de la API",
         "contact": "jorgepastor9120@gmail.com",
         "version": "1.0"
@@ -12,14 +12,14 @@
         }
     ],
     "paths": {
-        "/api/v1/register": {
+        "/api/v1/signup": {
             "post": {
                 "tags": [
-                    "Users"
+                    "Auth"
                 ],
                 "summary": "Registro de usuario",
                 "description": "Registro de usuarios",
-                "operationId": "Register",
+                "operationId": "signup",
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -86,79 +86,13 @@
                 }
             }
         },
-        "/api/v1/login": {
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Login de usuario",
-                "description": "Login de usuario",
-                "operationId": "authLogin",
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "email"
-                                    },
-                                    "password": {
-                                        "type": "password"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        },
-                        "application/json": {
-                            "schema": {}
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "No se ha podido procesar",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Resource Not Found"
-                    }
-                }
-            }
-        },
         "/api/v1/bookings": {
             "get": {
                 "tags": [
                     "Bookings"
                 ],
                 "summary": "Mostrar el listado de reservas",
-                "description": "Mostramos el listado de los regitros solicitados.",
+                "description": "Mostramos el listado de los registros solicitados.",
                 "operationId": "daf1d30d180ba251d3a594b8cc06fcc5",
                 "responses": {
                     "200": {
@@ -178,7 +112,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -257,7 +196,200 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings/{id}": {
+            "put": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Actualiza una reserva",
+                "description": "Actualizar un registro.",
+                "operationId": "09997977865b4eac7a19d9a76304b362",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id booking",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Actualiza una reserva",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "member_id",
+                                    "court_id",
+                                    "date",
+                                    "hour_reserve_id"
+                                ],
+                                "properties": {
+                                    "member_id": {
+                                        "type": "integer",
+                                        "format": "int20",
+                                        "example": "4"
+                                    },
+                                    "court_id": {
+                                        "type": "integer",
+                                        "format": "int20",
+                                        "example": "7"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2023-10-25"
+                                    },
+                                    "hour_reserve_id": {
+                                        "description": "Hora del día (formato de 24 horas desde las 08:00 a 22:00)",
+                                        "type": "integer",
+                                        "format": "int20",
+                                        "enum": [
+                                            1,
+                                            2,
+                                            3,
+                                            4,
+                                            5,
+                                            6,
+                                            7,
+                                            8,
+                                            9,
+                                            10,
+                                            11,
+                                            12,
+                                            13
+                                        ],
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido actualizar el registro."
+                    },
+                    "405": {
+                        "description": "No se ha permitido actualizar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Elimina una reserva",
+                "description": "Elimina un registro.",
+                "operationId": "6d30d72eafb0ab89647f6058bd75774c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id booking",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Elimina una reserva"
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido eliminar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookings/{date}": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Mostrar el listado de reservas según una fecha",
+                "description": "Mostramos el listado de los registros solicitados según una fecha.",
+                "operationId": "cb632dc7d91dd90d22e42ec0877277fe",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "description": "date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2023-10-25"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/v1/courts": {
@@ -286,7 +418,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -338,7 +475,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/v1/courts/{id}": {
@@ -404,7 +546,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -441,7 +588,81 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/courts/list": {
+            "get": {
+                "tags": [
+                    "Courts"
+                ],
+                "summary": "Mostrar el listado de pistas libres según una fecha, un deporte y un miembro",
+                "description": "Mostramos el listado de pistas disponibles según varios parametros.",
+                "operationId": "cd9ca9af2216fa87e3886dd23de21f6e",
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "example": "2023-10-25"
+                    },
+                    {
+                        "name": "sport_id",
+                        "in": "query",
+                        "description": "sport_id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        },
+                        "example": "3"
+                    },
+                    {
+                        "name": "member_id",
+                        "in": "query",
+                        "description": "member_id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        },
+                        "example": "30"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/v1/members": {
@@ -470,7 +691,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -522,7 +748,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/v1/members/{id}": {
@@ -588,7 +819,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -625,7 +861,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/v1/sports": {
@@ -654,7 +895,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -700,7 +946,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/v1/sports/{id}": {
@@ -757,7 +1008,12 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -794,7 +1050,226 @@
                     "default": {
                         "description": "Ha ocurrido un error."
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Mostrar el listado de usuarios",
+                "description": "Mostramos el listado de los regitros solicitados.",
+                "operationId": "b343fe695d1beaa03b7deb8449dd1b7c",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se ha podido cargar el listado."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Registra un usuario",
+                "description": "Registrar un usuario.",
+                "operationId": "71d86dd873f9e567415d5da5929a0dea",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "text"
+                                    },
+                                    "email": {
+                                        "type": "text"
+                                    },
+                                    "password": {
+                                        "type": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "201": {
+                        "description": "El usuario ha sido creado"
+                    },
+                    "404": {
+                        "description": "No se ha podido registrar el usuario."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Actualiza un usuario",
+                "description": "Actualizar un registro.",
+                "operationId": "e27513375b71e3b3dcc043da6f62129c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Actualiza un usuario",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "text",
+                                        "example": "Prueba"
+                                    },
+                                    "email": {
+                                        "type": "text",
+                                        "example": "prueba@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "password",
+                                        "example": ""
+                                    },
+                                    "password_confirmation": {
+                                        "type": "password",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido actualizar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Elimina un usuario",
+                "description": "Elimina un registro.",
+                "operationId": "ae967f8cf847f7d2ad9eba19833f58cd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int20"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Elimina un usuario"
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "No se ha podido eliminar el registro."
+                    },
+                    "503": {
+                        "description": "El servidor no está disponible en este momento"
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         }
     },
@@ -926,11 +1401,12 @@
                 "type": "oauth2",
                 "description": "Laravel passport oauth2 security.",
                 "in": "header",
-                "scheme": "https",
+                "scheme": "http",
+                "name": "authorization",
                 "flows": {
                     "password": {
                         "authorizationUrl": "http://localhost/oauth/authorize",
-                        "tokenUrl": "http://localhost/oauth/token",
+                        "tokenUrl": "http://127.0.0.1:8000/api/v1/oauth/token",
                         "refreshUrl": "http://localhost/token/refresh",
                         "scopes": []
                     }
@@ -939,6 +1415,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Auth",
+            "description": "Registro de usuarios"
+        },
         {
             "name": "Users",
             "description": "Gestión de los usuarios de la aplicación"

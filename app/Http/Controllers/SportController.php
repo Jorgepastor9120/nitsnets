@@ -52,14 +52,6 @@ class SportController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Sport $sport)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Sport $sport)

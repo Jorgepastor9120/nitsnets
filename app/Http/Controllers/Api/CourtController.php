@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CourtStoreRequest;
 use App\Http\Requests\CourtUpdateApiRequest;
 use App\Models\Court;
+use App\Models\HourReserve;
 use Illuminate\Http\Request;
 
 class CourtController extends Controller
@@ -18,6 +19,7 @@ class CourtController extends Controller
      *    path="/api/v1/courts",
      *    tags={"Courts"},
      *    summary="Mostrar el listado de pistas",
+     *    security={{"passport": {}}},
      *    @OA\Response(
      *        response=200,
      *        description="OK",
@@ -39,7 +41,7 @@ class CourtController extends Controller
      */
     public function index(Court $court)
     {
-        return $court->get();
+        return $court->paginate(5);
     }
 
     /**
@@ -50,6 +52,7 @@ class CourtController extends Controller
      *    path="/api/v1/courts",
      *    tags={"Courts"},
      *    summary="Registra una pista",
+     *    security={{"passport": {}}},
      *    @OA\RequestBody(
      *       required=true,
      *       description="Registra una pista",
@@ -110,6 +113,7 @@ class CourtController extends Controller
      *    path="/api/v1/courts/{id}",
      *    tags={"Courts"},
      *    summary="Actualiza una pista",
+     *    security={{"passport": {}}},
      *    @OA\RequestBody(
      *        required=true,
      *        description="Actualiza una pista",
@@ -176,6 +180,7 @@ class CourtController extends Controller
      *    path="/api/v1/courts/{id}",
      *    tags={"Courts"},
      *    summary="Elimina una pista",
+     *    security={{"passport": {}}},
      *    @OA\RequestBody(
      *       description="Elimina una pista"
      *    ),
@@ -209,12 +214,113 @@ class CourtController extends Controller
 
         if (!$court) {
             return response([
-                'message' => 'No se encontró el socio con el ID especificado'
+                'message' => 'No se encontró la pista con el ID especificado'
             ], 404);
         }
 
         return response([
-            'message' => 'Socio eliminado'
+            'message' => 'Pista eliminada'
         ], 200);
+    }
+
+    /**
+     * Mostramos el listado de pistas disponibles según varios parametros.
+     * @return \Illuminate\Http\Response
+     *
+     * @OA\Get(
+     *    path="/api/v1/courts/list",
+     *    tags={"Courts"},
+     *    summary="Mostrar el listado de pistas libres según una fecha, un deporte y un miembro",
+     *    security={{"passport": {}}},
+     *    @OA\Parameter(
+     *        name="date", in="query", required=true, description="date",
+     *        @OA\schema(type="string", format="date"),
+     *        example="2023-10-25",
+     *    ),
+     *    @OA\Parameter(
+     *        name="sport_id", in="query", required=true, description="sport_id",
+     *        @OA\schema(type="integer", format="int20"),
+     *        example="3",
+     *    ),
+     *    @OA\Parameter(
+     *        name="member_id", in="query", required=true, description="member_id",
+     *        @OA\schema(type="integer", format="int20"),
+     *        example="30",
+     *    ),
+     *    @OA\Response(
+     *        response=200,
+     *        description="OK",
+     *        @OA\JsonContent()
+     *    ),
+     *    @OA\Response(
+     *        response=404,
+     *        description="No se ha podido cargar el listado."
+     *    ),
+     *    @OA\Response(
+     *        response=503,
+     *        description="El servidor no está disponible en este momento"
+     *    ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Ha ocurrido un error."
+     *     )
+     * )
+     */
+    public function listBookingByDateSportMember()
+    {
+        $date = request()->input('date');
+        $sportId = request()->input('sport_id');
+        $memberId = request()->input('member_id');
+
+        $courts = Court::where('sport_id', $sportId)->get();
+
+        $curtsArray = [];
+
+        foreach ($courts as $court) {
+
+            $hours = HourReserve::whereNotIn('id', function ($query) use ($memberId, $date, $court)
+                                                    {
+                                                        $query->select('hour_reserve_id')
+                                                            ->from('bookings')
+                                                            ->where('court_id', $court->id)
+                                                            ->where('date', $date)
+                                                            ->orWhere(function ($query) use ($memberId, $date)
+                                                                    {
+                                                                        $query->whereNotNull('member_id')
+                                                                            ->where('member_id', $memberId)
+                                                                            ->where('date', $date);
+                                                                    })
+                                                            ->orWhere(function ($query)
+                                                                    {
+                                                                        $query->whereIn('member_id', function ($query) {
+                                                                                $query->select('id')
+                                                                                    ->from('hour_reserves');
+                                                                            });
+                                                                    });
+                                                    })->paginate(5);
+
+            $addCourt = [
+                "id" => $court->id,
+                "name" => $court->name,
+                "sport_id" => $court->sport_id,
+                "hour_reserves" => []
+            ];
+
+            foreach ($hours as $hour) {
+
+                $addHour = [
+                    "id" => $hour->id,
+                    "name" => $hour->name
+                ];
+
+                $addCourt['hour_reserves'][] = $addHour;
+
+            }
+
+            $curtsArray[] = $addCourt;
+
+        }
+
+        return $curtsArray;
     }
 }

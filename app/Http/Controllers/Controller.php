@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
 /**
     * @OA\Info(
-    *             title="API de prueba",
+    *             title="API de prueba NITSNETS",
     *             version="1.0",
     *             description="Esta es una primera versión de la API",
     *             contact="jorgepastor9120@gmail.com"
@@ -17,6 +18,10 @@ use Illuminate\Routing\Controller as BaseController;
     * @OA\Server(
     *               url="http://127.0.0.1:8000"
     * ),
+    * @OA\Tag(
+    *            name="Auth",
+    *            description="Registro de usuarios"
+    * )
     * @OA\Tag(
     *            name="Users",
     *            description="Gestión de los usuarios de la aplicación"
@@ -41,5 +46,5 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }

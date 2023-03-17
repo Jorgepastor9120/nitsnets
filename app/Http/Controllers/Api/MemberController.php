@@ -18,6 +18,7 @@ class MemberController extends Controller
      *    path="/api/v1/members",
      *    tags={"Members"},
      *    summary="Mostrar el listado de socios",
+     *    security={{"passport": {}}},
      *    @OA\Response(
      *        response=200,
      *        description="OK",
@@ -31,10 +32,10 @@ class MemberController extends Controller
      *        response=503,
      *        description="El servidor no está disponible en este momento"
      *    ),
-     *     @OA\Response(
-     *         response="default",
-     *         description="Ha ocurrido un error."
-     *     )
+     *    @OA\Response(
+     *        response="default",
+     *        description="Ha ocurrido un error."
+     *    ),
      * )
      */
 
@@ -51,6 +52,7 @@ class MemberController extends Controller
      *    path="/api/v1/members",
      *    tags={"Members"},
      *    summary="Registra un socio",
+     *    security={{"passport": {}}},
      *    @OA\RequestBody(
      *       required=true,
      *       description="Registra un socio",
@@ -111,6 +113,7 @@ class MemberController extends Controller
      *    path="/api/v1/members/{id}",
      *    tags={"Members"},
      *    summary="Actualiza un socio",
+     *    security={{"passport": {}}},
      *    @OA\RequestBody(
      *        required=true,
      *        description="Actualiza un socio",
@@ -177,6 +180,7 @@ class MemberController extends Controller
      *    path="/api/v1/members/{id}",
      *    tags={"Members"},
      *    summary="Elimina un socio",
+     *    security={{"passport": {}}},
      *    @OA\RequestBody(
      *       description="Elimina un socio"
      *    ),

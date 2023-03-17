@@ -38,11 +38,6 @@ class MemberController extends Controller
             ]);
     }
 
-    public function show(Member $member)
-    {
-        //En desuso
-    }
-
     /**
      * Show the form for editing the specified resource.
      */

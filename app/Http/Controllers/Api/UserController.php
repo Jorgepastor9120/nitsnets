@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SportStoreRequest;
-use App\Http\Requests\SportUpdateApiRequest;
-use App\Models\Sport;
+use App\Models\User;
+use App\Http\Controllers\Api\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
-
-class SportController extends Controller
+class UserController extends Controller
 {
 
     /**
@@ -17,9 +17,9 @@ class SportController extends Controller
      * @return \Illuminate\Http\Response
      *
      * @OA\Get(
-     *    path="/api/v1/sports",
-     *    tags={"Sports"},
-     *    summary="Mostrar el listado de deportes",
+     *    path="/api/v1/users",
+     *    tags={"Users"},
+     *    summary="Mostrar el listado de usuarios",
      *    security={{"passport": {}}},
      *    @OA\Response(
      *        response=200,
@@ -40,27 +40,33 @@ class SportController extends Controller
      *     )
      * )
      */
-    public function index(Sport $sport)
+    public function index(User $user)
     {
-        return $sport->get();
+        return $user->get();
     }
 
     /**
-     * Registrar un deporte.
+     * Registrar un usuario.
      * @return \Illuminate\Http\Response
      *
      * @OA\Post(
-     *    path="/api/v1/sports",
-     *    tags={"Sports"},
-     *    summary="Registra un deporte",
+     *    path="/api/v1/users",
+     *    tags={"Users"},
+     *    summary="Registra un usuario",
      *    security={{"passport": {}}},
      *    @OA\RequestBody(
-     *       required=true,
-     *       description="Registra un deporte",
-     *       @OA\JsonContent(
-     *           required={"name"},
-     *           @OA\Property(property="name", type="string", format="text", example="Tenis"),
-     *       ),
+     *         @OA\JsonContent(),
+     *         @OA\MediaType(
+     *            mediaType="multipart/form-data",
+     *            @OA\Schema(
+     *               type="object",
+     *               required={"name","email", "password", "password_confirmation"},
+     *               @OA\Property(property="name", type="text"),
+     *               @OA\Property(property="email", type="text"),
+     *               @OA\Property(property="password", type="password"),
+     *               @OA\Property(property="password_confirmation", type="password")
+     *            ),
+     *        ),
      *    ),
      *    @OA\Response(
      *        response=200,
@@ -68,11 +74,11 @@ class SportController extends Controller
      *    ),
      *    @OA\Response(
      *        response=201,
-     *        description="El socio ha sido creado"
+     *        description="El usuario ha sido creado"
      *    ),
      *    @OA\Response(
      *        response=404,
-     *        description="No se ha podido registrar el deporte."
+     *        description="No se ha podido registrar el usuario."
      *    ),
      *    @OA\Response(
      *        response=503,
@@ -84,20 +90,27 @@ class SportController extends Controller
      *     )
      * )
      */
-    public function store(SportStoreRequest $request)
+    public function store(Request $request)
     {
-        $createSport = Sport::create(
-            [
-                'name' => $request->name
-            ]);
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-        if (!$createSport) {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        if (!$user) {
             return response([
                 'message' => 'La creación ha fallado'
             ], 404);
         }
 
-        return $createSport;
+        return $user;
     }
 
     /**
@@ -105,22 +118,23 @@ class SportController extends Controller
      * @return \Illuminate\Http\Response
      *
      * @OA\Put(
-     *    path="/api/v1/sports/{id}",
-     *    tags={"Sports"},
-     *    summary="Actualiza un deporte",
+     *    path="/api/v1/users/{id}",
+     *    tags={"Users"},
+     *    summary="Actualiza un usuario",
      *    security={{"passport": {}}},
      *    @OA\RequestBody(
      *        required=true,
-     *        description="Actualiza un deporte",
+     *        description="Actualiza un usuario",
      *        @OA\JsonContent(
-     *            required={"name"},
-     *            @OA\Property(
-     *                property="name", type="string", format="text", example="Tenis"
-     *            ),
-     *        ),
+     *           required={"name","email", "password", "password_confirmation"},
+     *           @OA\Property(property="name", type="text", example="Prueba"),
+     *           @OA\Property(property="email", type="text", example="prueba@gmail.com"),
+     *           @OA\Property(property="password", type="password", example=""),
+     *           @OA\Property(property="password_confirmation", type="password", example="")
+     *       ),
      *    ),
      *    @OA\Parameter(
-     *        name="id", in="path", required=true, description="Id sport",
+     *        name="id", in="path", required=true, description="Id user",
      *        @OA\schema(type="integer", format="int20")
      *    ),
      *    @OA\Response(
@@ -141,16 +155,23 @@ class SportController extends Controller
      *    )
      * )
      */
-    public function update(SportUpdateApiRequest $request, int $id)
+    public function update(Request $request, int $id)
     {
-        $sport = Sport::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        $sport->update(
-            [
-                'name' => $request->name
-            ]);
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-        return $sport;
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return $user;
     }
 
     /**
@@ -158,15 +179,15 @@ class SportController extends Controller
      * @return \Illuminate\Http\Response
      *
      * @OA\Delete(
-     *    path="/api/v1/sports/{id}",
-     *    tags={"Sports"},
-     *    summary="Elimina un deporte",
+     *    path="/api/v1/users/{id}",
+     *    tags={"Users"},
+     *    summary="Elimina un usuario",
      *    security={{"passport": {}}},
      *    @OA\RequestBody(
-     *       description="Elimina un deporte"
+     *       description="Elimina un usuario"
      *    ),
      *    @OA\Parameter(
-     *        name="id", in="path", required=true, description="Id sport",
+     *        name="id", in="path", required=true, description="Id user",
      *        @OA\schema(type="integer", format="int20")
      *    ),
      *    @OA\Response(
@@ -189,18 +210,18 @@ class SportController extends Controller
      */
     public function destroy(int $id)
     {
-        $sport = Sport::findorFail($id);
+        $user = User::findorFail($id);
 
-        $sport->delete();
+        $user->delete();
 
-        if (!$sport) {
+        if (!$user) {
             return response([
-                'message' => 'No se encontró el deporte con el ID especificado'
+                'message' => 'No se encontró el usuario con el ID especificado'
             ], 404);
         }
 
         return response([
-            'message' => 'Deporte eliminado'
+            'message' => 'Usuario eliminado'
         ], 200);
     }
 }

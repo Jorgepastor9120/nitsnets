@@ -51,14 +51,6 @@ class CourtController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Court $court)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Court $court)

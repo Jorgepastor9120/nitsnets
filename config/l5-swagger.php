@@ -5,7 +5,15 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'API de prueba',
+                \App\Http\Middleware\EncryptCookies::class,
+                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                \Illuminate\Session\Middleware\StartSession::class,
+                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+                \App\Http\Middleware\VerifyCsrfToken::class,
+                \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
+                'auth',
+                'title' => 'API de prueba NITSNETS',
             ],
 
             'routes' => [
@@ -189,11 +197,12 @@ return [
                     'type' => 'oauth2', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
                     'description' => 'Laravel passport oauth2 security.',
                     'in' => 'header',
-                    'scheme' => 'https',
+                    'scheme' => 'http',
+                    'name' => 'authorization',
                     'flows' => [
                         "password" => [
                             "authorizationUrl" => config('app.url') . '/oauth/authorize',
-                            "tokenUrl" => config('app.url') . '/oauth/token',
+                            "tokenUrl" => 'http://127.0.0.1:8000/api/v1/oauth/token',
                             "refreshUrl" => config('app.url') . '/token/refresh',
                             "scopes" => []
                         ],
@@ -295,7 +304,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://localhost'),
         ],
     ],
 ];
