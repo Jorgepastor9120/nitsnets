@@ -8,7 +8,7 @@ El proyecto consta de dos partes:
 
 Para ejecutar el proyecto se deben seguir los siguientes pasos:
 
-Tener un servidor apache levantado en el puerto 80 junto con el servicio de MySQL en el puerto 3306 (http://localhost/phpmyadmin).
+Tener un servidor APACHE levantado en el puerto 80 junto con el servicio de MySQL en el puerto 3306 (http://localhost/phpmyadmin).
 
 Ejecutar los siguientes comandos en la ruta del proyecto:
 
