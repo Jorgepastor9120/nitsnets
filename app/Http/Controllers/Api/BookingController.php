@@ -340,11 +340,11 @@ class BookingController extends Controller
         }
 
         if ($this->countMemberCourtBookingsUpdate(
-                $id,
-                $request->member_id,
-                $request->date,
-                $request->hour_reserve_id
-            )) {
+            $id,
+            $request->member_id,
+            $request->date,
+            $request->hour_reserve_id
+        )) {
             return response([
                 'message' => 'Este socio ya tiene una reserva a esta hora'
             ], 422);

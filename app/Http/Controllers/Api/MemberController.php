@@ -157,6 +157,12 @@ class MemberController extends Controller
     {
         $member = Member::findOrFail($id);
 
+        if (!$member) {
+            return response([
+                'message' => 'No se encontró el socio con el ID especificado'
+            ], 404);
+        }
+
         $member->update(
             [
                 'name' => $request->name,

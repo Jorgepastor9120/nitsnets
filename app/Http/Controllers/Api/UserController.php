@@ -159,6 +159,12 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        if (!$user) {
+            return response([
+                'message' => 'No se encontró el usuario con el ID especificado'
+            ], 404);
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],

@@ -141,9 +141,16 @@ class SportController extends Controller
      *    )
      * )
      */
+
     public function update(SportUpdateApiRequest $request, int $id)
     {
         $sport = Sport::findOrFail($id);
+
+        if (!$sport) {
+            return response([
+                'message' => 'No se encontró el deporte con el ID especificado'
+            ], 404);
+        }
 
         $sport->update(
             [

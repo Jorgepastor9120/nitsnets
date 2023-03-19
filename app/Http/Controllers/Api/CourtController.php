@@ -157,6 +157,12 @@ class CourtController extends Controller
     {
         $court = Court::findOrFail($id);
 
+        if (!$court) {
+            return response([
+                'message' => 'No se encontró pista con el ID especificado'
+            ], 404);
+        }
+
         $court->update(
             [
                 'name' => $request->name,
