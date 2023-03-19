@@ -21,5 +21,7 @@ Tener un servidor APACHE levantado en el puerto 80 junto con el servicio de MySQ
 3. Ingresar los datos de registro mas el cliente UUID para autenticarte.
 
 Cliente UUID:
+
 ID: 98af4be4-c5f9-441a-b2c9-8b85f688894f
+
 Secret: 8wuym6zIsoUYZdQZSW4GNedDpr09L0Eyb6t2QHxH
